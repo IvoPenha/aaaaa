@@ -1,0 +1,59 @@
+<div>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Titulo</th>
+        <th>Modalidade</th>
+        <th>A partir de</th>
+        <th>Ver detalhes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of products">
+        <td>{{ item.name }}</td>
+        <td>{{ item.title }}</td>
+        <td>{{ item.modality }}</td>
+        <td>{{ getLowerPlanPrice(item) }} / mes</td>
+        <td (click)="selectProduct(item)" style="cursor: pointer">👀</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="selectedProduct">
+    <h2>{{ selectedProduct.name }}</h2>
+
+    <form [formGroup]="couponFormGroup">
+      <p>Aplicar cupom</p>
+      <input type="text" formControlName="coupon" placeholder="Cupom" />
+      <button (click)="applyCoupon()" [disabled]="!couponFormGroup.valid">
+        Buscar
+      </button>
+    </form>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Valor</th>
+          <!-- <th>Periodo</th> -->
+          <th *ngIf="productHasDiscount(selectedProduct)">Desconto</th>
+          <th *ngIf="productHasDiscount(selectedProduct)" style="color: green">
+            Valor final
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let plan of selectedProduct.plans">
+          <td>{{ plan.name }}</td>
+          <td>{{ plan.price }}</td>
+          <!-- <td>{{ plan.plan_duration }}</td> -->
+          <td *ngIf="productHasDiscount(selectedProduct)">
+            {{ plan.discount_value }}
+          </td>
+          <td *ngIf="productHasDiscount(selectedProduct)">
+            {{ getDiscountedValue(plan) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
